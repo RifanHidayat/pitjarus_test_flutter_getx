@@ -22,6 +22,7 @@ class DatabaseHelper {
   final String columnLatitude = 'latitude';
   final String columnLongitude = 'longitude';
   final String columnIsVisit = 'is_visit';
+  final String columnLastVisit = 'last_visit';
   static Database? _db;
 
   DatabaseHelper.internal();
@@ -43,7 +44,7 @@ class DatabaseHelper {
 
   void _onCreate(Database db, int NewViersion) async {
     await db.execute(
-        'CREATE TABLE $tableStore(id INTEGER PRIMARY KEY AUTOINCREMENT, $columnStoreId,$columnStoreName TEXT,$columnSubchannelName TEXT,$columnStoreAddress TEXT,$columnDcName TEXT,$columnAccountName TEXT, $columnChannelName TEXT,$columnAreaName TEXT,$columnRegionName,$columnLongitude TEXT,$columnLatitude TEXT,$columnStoreCode TEXT,$columnIsVisit TEXT NULL)');
+        'CREATE TABLE $tableStore(id INTEGER PRIMARY KEY AUTOINCREMENT, $columnStoreId,$columnStoreName TEXT,$columnSubchannelName TEXT,$columnStoreAddress TEXT,$columnDcName TEXT,$columnAccountName TEXT, $columnChannelName TEXT,$columnAreaName TEXT,$columnRegionName,$columnLongitude TEXT,$columnLatitude TEXT,$columnStoreCode TEXT,$columnIsVisit TEXT NULL,$columnLastVisit TEXT NULL)');
 
     // await db.execute(
     //     'CREATE TABLE $tableStore(id INTEGER PRIMARY KEY AUTOINCREMENT, $columnStoreId INTEGER, $columnStoreName TEXT, $columnDcName  TEXT,$columnAccountName Text,$columnAreaName  TEXT,$columnRegionName  TEXT,$columnSubchannelName TEXT),$columnChannelName TEXT,$columnLatitude TEXT,$columnLongitude TEXT');
@@ -53,22 +54,6 @@ class DatabaseHelper {
   Future<int> save(BuildContext context, StoreModel storeModel) async {
     var dbClient = await db;
     var result = await dbClient.insert(tableStore, storeModel.toMap());
-
-    // var result = await dbClient.insert(tableStore, {
-    //   columnStoreId: storeId.toString(),
-    //   columnStoreCode: storeCode.toString(),
-    //   columnStoreName: storeName.toString(),
-    //   columnStoreAddress: address.toString(),
-    //   columnAccountName: accountName.toString(),
-    //   columnSubchannelName: accountName.toString(),
-    //   columnChannelName: channelName.toString(),
-    //   columnAreaName: areaName.toString(),
-    //   columnRegionName: regionName.toString(),
-    //   columnLatitude: latitude.toString(),
-    //   columnLongitude: longitude.toString(),
-    //   columnDcName: dcName.toString(),
-    //   columnIsVisit: '1'
-    // });
 
     return result;
   }
@@ -93,6 +78,7 @@ class DatabaseHelper {
         columnLatitude,
         columnLongitude,
         columnIsVisit,
+        columnLastVisit
       ],
     );
     return result;
@@ -101,5 +87,13 @@ class DatabaseHelper {
   Future<int> delete() async {
     var dbClient = await db;
     return await dbClient.delete(tableStore);
+  }
+
+  Future<int> update(var lastVisit, var id) async {
+    print("id ${id}");
+    var dbClient = await db;
+    return await dbClient.update(
+        tableStore, {'last_visit': lastVisit, 'is_visit': 1},
+        where: "id = ?", whereArgs: [id]);
   }
 }

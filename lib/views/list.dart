@@ -135,10 +135,12 @@ class ListPage extends StatelessWidget {
                                   return Container(
                                     width: Get.mediaQuery.size.width,
                                     child: InkWell(
-                                      onTap: () {
-                                        Get.toNamed(RoutesName.detail,
+                                      onTap: () async {
+                                        await Get.toNamed(
+                                            RoutesName.detail,
                                             arguments:
                                                 storeController.notes[index]);
+                                       
                                       },
                                       child: Card(
                                         child: Container(

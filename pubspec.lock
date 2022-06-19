@@ -114,6 +114,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.12.0"
+  format_indonesia:
+    dependency: "direct main"
+    description:
+      name: format_indonesia
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   geocode:
     dependency: "direct main"
     description:
@@ -183,7 +190,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.0"
+    version: "0.16.1"
   js:
     dependency: transitive
     description:

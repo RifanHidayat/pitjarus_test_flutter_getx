@@ -12,6 +12,13 @@ class ColorsApp {
   static Color red = Colors.red;
   static Color orange = Colors.orange;
 
+  //black
+  static Color blackColor1 = HexColor('#5B5B5B');
+  static Color blackColor2 = HexColor('#444444');
+  static Color blackColor3 = HexColor('#9C9C9C');
+  static Color blackColor4 = HexColor('#858585');
+  static Color blackColor5 = HexColor('#F8F8F8');
+
   // final Color dongkerColor = HexColor("#232744");
   // final Color purpleColor = HexColor("#8c4dfe");
   // final Color purpleColor1 = HexColor('#5246FE');

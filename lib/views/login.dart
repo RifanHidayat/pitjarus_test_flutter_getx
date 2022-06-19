@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pitjarus_test/assets/colors.dart';
+import 'package:pitjarus_test/assets/font.dart';
 import 'package:pitjarus_test/assets/size.dart';
 import 'package:pitjarus_test/controllers/login.dart';
 import 'package:pitjarus_test/routes/name.dart';
@@ -66,7 +67,14 @@ class LoginPage extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        const CheckboxWidget(),
+                        Obx(() {
+                          return CheckboxWidget(
+                            isChecked: loginController.isKeepusername.value,
+                            onChanged: (value) {
+                              loginController.isKeepusername.value = value;
+                            },
+                          );
+                        }),
                         LabelWidget(
                           text: "Keep Username",
                           color: ColorsApp.baseColor,
@@ -116,7 +124,9 @@ class LoginPage extends StatelessWidget {
                     child: Container(
                         alignment: Alignment.center,
                         width: Get.mediaQuery.size.width,
-                        child: const LabelWidget(
+                        child: LabelWidget(
+                          size: TextSize.sizep2,
+                          color: ColorsApp.blackColor4,
                           text: "App ver 20013FEA68BCC820C",
                         )),
                   )),

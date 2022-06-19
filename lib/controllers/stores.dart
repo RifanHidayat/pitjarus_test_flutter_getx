@@ -20,6 +20,7 @@ class StoresController extends GetxController {
   RxList<StoreModel> notes = <StoreModel>[].obs;
   RxList<Marker> markers = <Marker>[].obs;
   RxList<Circle> circles = <Circle>[].obs;
+  RxInt id = 0.obs;
   @override
   void onInit() {
     super.onInit();
@@ -34,9 +35,11 @@ class StoresController extends GetxController {
 
       await db.list().then((data) {
         notes.value = StoreModel.fromJsonToList(data);
-        isLoading.value = false;
+
+        print(data.toString());
         getMarkers();
         getDistance();
+        isLoading.value = false;
       });
     } catch (e) {
       isLoading.value = false;
@@ -102,5 +105,9 @@ class StoresController extends GetxController {
     } catch (e) {
       print("error $e");
     }
+  }
+
+  void setLastVisit() async {
+    db.update(DateTime.now().toString(), id.value);
   }
 }

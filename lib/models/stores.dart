@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class StoreModel {
+  var id;
   var storeId;
   var storeCode;
   var storeName;
@@ -14,6 +15,7 @@ class StoreModel {
   var latitude;
   var longitude;
   var distance;
+  var lastVisit;
 
   StoreModel(
       {this.storeCode,
@@ -28,7 +30,9 @@ class StoreModel {
       this.longitude,
       this.regionName,
       this.storeId,
-      this.distance});
+      this.lastVisit,
+      this.distance,
+      this.id});
 
   Map<String, dynamic> toMap() {
     return {
@@ -47,8 +51,15 @@ class StoreModel {
     };
   }
 
+  Map<String, dynamic> toMapLastVisit() {
+    return {
+      'last_visit': storeId.toString(),
+    };
+  }
+
   factory StoreModel.fromJson(Map<String, dynamic> map) {
     return StoreModel(
+        id: map['id'],
         storeCode: map['store_code'],
         storeName: map['store_name'],
         address: map['address'],
@@ -61,6 +72,7 @@ class StoreModel {
         longitude: map['longitude'],
         regionName: map['region_name'],
         storeId: map['store_id'],
+        lastVisit: map['last_visit'],
         distance: map['distance']);
   }
 

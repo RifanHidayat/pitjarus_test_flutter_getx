@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pitjarus_test/assets/colors.dart';
 
 class CheckboxWidget extends StatelessWidget {
-  final isChecked;
-  const CheckboxWidget({Key? key, this.isChecked}) : super(key: key);
+  final isChecked,onChanged;
+  const CheckboxWidget({Key? key, this.isChecked,this.onChanged}) : super(key: key);
 
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -23,11 +23,7 @@ class CheckboxWidget extends StatelessWidget {
       checkColor: Colors.white,
       fillColor: MaterialStateProperty.resolveWith(getColor),
       value: isChecked ?? false,
-      onChanged: (bool? value) {
-        // setState(() {
-        //   isChecked = value!;
-        // });
-      },
+      onChanged:onChanged
     );
   }
 }

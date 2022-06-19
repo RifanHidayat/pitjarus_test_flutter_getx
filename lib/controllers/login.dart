@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:pitjarus_test/assets/alert.dart';
 import 'package:pitjarus_test/models/stores.dart';
 import 'package:pitjarus_test/routes/app.dart';
 import 'package:pitjarus_test/routes/name.dart';
@@ -17,6 +18,8 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   var usernameCtr = TextEditingController();
   var passwordCtr = TextEditingController();
+
+  RxBool isKeepusername = false.obs;
 
   @override
   void onInit() {
@@ -40,19 +43,26 @@ class LoginController extends GetxController {
       var response = jsonDecode(value.body);
       print(response);
       if (value.statusCode == 200) {
+        usernameCtr.text = "";
         if (response['stores'] != null) {
-          saveSession(true, true, usernameCtr.text);
+          saveSession(true, isKeepusername.value, usernameCtr.text);
           List<StoreModel> stores =
               StoreModel.fromJsonToList(response['stores']);
 
           stores.forEach((element) async {
             await db.save(context, element);
           });
-          return await Get.toNamed(RoutesName.list);
+
+          await Get.offAllNamed(RoutesName.list);
+          usernameCtr.text = "";
+          passwordCtr.text = "";
+        } else {
+          isLoading.value = false;
+          Alert().messagevalidation(response['message'], 4);
         }
         //
       }
-      isLoading.value = false;
+
       print(isLoading);
       return null;
     });
@@ -71,6 +81,7 @@ class LoginController extends GetxController {
 
     var isKeepUsername = sharedPreferences.getBool("is_keep_username");
     var username = sharedPreferences.getString("username");
+    isKeepusername.value = isKeepUsername!;
     if (isKeepUsername == true) {
       usernameCtr.text = username.toString();
     }
@@ -81,6 +92,6 @@ class LoginController extends GetxController {
     var isLogin = sharedPreferences.setBool("is_login", false);
     await db.delete();
 
-    await Get.toNamed(RoutesName.login);
+    await Get.offAllNamed(RoutesName.login);
   }
 }
