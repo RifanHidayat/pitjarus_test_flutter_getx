@@ -3,7 +3,13 @@ import 'package:get/get.dart';
 import 'package:pitjarus_test/assets/colors.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
-  final icon, controller, hint, keyboardType, obsecureText, hintColor;
+  final icon,
+      controller,
+      hint,
+      keyboardType,
+      obsecureText,
+      hintColor,
+      onChanged;
   final color;
   const TextFormFieldWidget(
       {Key? key,
@@ -13,13 +19,15 @@ class TextFormFieldWidget extends StatelessWidget {
       this.keyboardType,
       this.obsecureText,
       this.color,
+      this.onChanged,
       this.hintColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 1.0,
+      borderRadius: BorderRadius.circular(5),
+      elevation: 1,
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
@@ -36,11 +44,18 @@ class TextFormFieldWidget extends StatelessWidget {
                 borderSide: BorderSide(color: ColorsApp.baseColor, width: 1.0),
                 borderRadius: BorderRadius.circular(5)),
             border: OutlineInputBorder(
-                borderSide: BorderSide(color: ColorsApp.hint, width: 1.0),
+                borderSide: BorderSide(
+                    color: Colors.black.withOpacity(0.2), width: 1.0),
                 borderRadius: BorderRadius.circular(5)),
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Colors.black.withOpacity(0.2), width: 1.0),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
             hintText: hint.toString(),
-            hintStyle: TextStyle(color: hintColor ?? ColorsApp.hint)),
+            hintStyle: TextStyle(color: Colors.black.withOpacity(0.2))),
         onSaved: (String? value) {},
+        onChanged: onChanged ?? null,
         // validator: (String? value) {
         //   return (value != null && value.contains('@'))
         //       ? 'Do not use the @ char.'

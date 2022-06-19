@@ -11,13 +11,16 @@ import 'package:pitjarus_test/services/auth.dart';
 import 'package:pitjarus_test/services/db_helper.dart';
 import 'package:pitjarus_test/services/endpoin.dart';
 import 'package:get/get.dart';
+import 'package:pitjarus_test/views/list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class LoginController extends GetxController {
   DatabaseHelper db = new DatabaseHelper();
   RxBool isLoading = false.obs;
   var usernameCtr = TextEditingController();
   var passwordCtr = TextEditingController();
+  RxBool isLogin = false.obs;
 
   RxBool isKeepusername = false.obs;
 
@@ -28,45 +31,75 @@ class LoginController extends GetxController {
     getSession();
   }
 
-  void auth(BuildContext context) async {
-    print("username ${usernameCtr.text}");
-    print("password ${passwordCtr.text}");
+  // void auth(BuildContext context) async {
+  //   var data = {
+  //     'username': usernameCtr.text,
+  //     'password': passwordCtr.text,
+  //   };
+  //   isLoading.value = true;
+  //   AuthService request = await AuthService(url: EndPoint.auth, body: data);
+  //   request.post().then((value) async {
+  //     isLoading.value = true;
+  //     var response = jsonDecode(value.body);
 
-    var data = {
+  //     if (response['stores'] != null) {
+  //       print(usernameCtr.text);
+  //       saveSession(true, isKeepusername.value, usernameCtr.text);
+  //       isLogin.value = true;
+  //       List<StoreModel> stores = StoreModel.fromJsonToList(response['stores']);
+
+  //       stores.forEach((element) async {
+  //         await db.save(context, element);
+  //       });
+  //       Future.delayed(const Duration(seconds: 5), () {
+  //         isLoading.value = false;
+  //         print(response);
+  //       });
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => ListPage()),
+  //       );
+  //     } else {
+  //       isLoading.value = false;
+  //       Alert().messagevalidation(response['message'], 4);
+  //     }
+  //     //
+
+  //     print(isLoading);
+  //     return null;
+  //   });
+  //   isLoading = false.obs;
+  // }
+
+  void auth(BuildContext context) async {
+    isLoading.value = true;
+    var body = {
       'username': usernameCtr.text,
       'password': passwordCtr.text,
     };
-    isLoading.value = true;
-    print(isLoading);
-    AuthService request = await AuthService(url: EndPoint.auth, body: data);
-    request.post().then((value) async {
-      var response = jsonDecode(value.body);
-      print(response);
-      if (value.statusCode == 200) {
-        usernameCtr.text = "";
-        if (response['stores'] != null) {
-          saveSession(true, isKeepusername.value, usernameCtr.text);
-          List<StoreModel> stores =
-              StoreModel.fromJsonToList(response['stores']);
+    var response = await http
+        .post(Uri.parse(EndPoint.auth), body: body)
+        .timeout(Duration(minutes: 2));
+    final data = jsonDecode(response.body);
+    print(response.body);
+    if (data['stores'] != null) {
+      saveSession(true, isKeepusername.value, usernameCtr.text);
+      List<StoreModel> stores = StoreModel.fromJsonToList(data['stores']);
 
-          stores.forEach((element) async {
-            await db.save(context, element);
-          });
+      stores.forEach((element) async {
+        await db.save(context, element);
+      });
 
-          await Get.offAllNamed(RoutesName.list);
-          usernameCtr.text = "";
-          passwordCtr.text = "";
-        } else {
-          isLoading.value = false;
-          Alert().messagevalidation(response['message'], 4);
-        }
-        //
-      }
-
-      print(isLoading);
-      return null;
-    });
-    // isLoading = false.obs;
+      isLoading.value = false;
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => ListPage()),
+      // );
+      Get.offAll(RoutesName.list);
+    } else {
+      isLoading.value = false;
+      Alert().messagevalidation(data['message'], 4);
+    }
   }
 
   void saveSession(isLogin, isKeepUsername, username) async {
@@ -79,6 +112,8 @@ class LoginController extends GetxController {
   void getSession() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
+    isLogin.value = sharedPreferences.getBool("is_login")!;
+
     var isKeepUsername = sharedPreferences.getBool("is_keep_username");
     var username = sharedPreferences.getString("username");
     isKeepusername.value = isKeepUsername!;
@@ -90,6 +125,8 @@ class LoginController extends GetxController {
   void logout() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var isLogin = sharedPreferences.setBool("is_login", false);
+    usernameCtr.clear();
+    passwordCtr.clear();
     await db.delete();
 
     await Get.offAllNamed(RoutesName.login);

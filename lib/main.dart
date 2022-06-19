@@ -4,6 +4,7 @@ import 'package:pitjarus_test/assets/colors.dart';
 import 'package:pitjarus_test/routes/app.dart';
 import 'package:pitjarus_test/views/list.dart';
 import 'package:pitjarus_test/views/login.dart';
+import 'package:pitjarus_test/views/splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: ListPage(),
-      title: "Programing",
+      home: SplassScreen(),
+      title: "Pitjarus",
       color: ColorsApp.baseColor,
       routes: Routes.routes,
       debugShowCheckedModeBanner: false,

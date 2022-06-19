@@ -31,20 +31,33 @@ class StoresController extends GetxController {
 
   Future fetchStores() async {
     try {
-      isLoading.value = true;
-
       await db.list().then((data) {
         notes.value = StoreModel.fromJsonToList(data);
+        getCurrentPosition();
 
-        print(data.toString());
         getMarkers();
         getDistance();
-        isLoading.value = false;
+        Future.delayed(const Duration(seconds: 1), () {
+          isLoading.value = false;
+        });
       });
     } catch (e) {
-      isLoading.value = false;
+      //isLoading.value = false;
       print("error ${e.toString()}");
     }
+  }
+
+  void seachingStore(name) {
+    fetchStores();
+    isLoading.value = true;
+    notes.value = notes.value
+        .where((element) =>
+            element.storeName.toString().toLowerCase().contains("A"))
+        .toList();
+    Future.delayed(const Duration(seconds: 1), () {
+      isLoading.value = false;
+    });
+  
   }
 
   void getSession() async {
@@ -103,6 +116,7 @@ class StoresController extends GetxController {
         element.distance = d.toString();
       });
     } catch (e) {
+      isLoading.value = false;
       print("error $e");
     }
   }

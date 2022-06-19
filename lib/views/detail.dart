@@ -3,6 +3,7 @@ import 'package:format_indonesia/format_indonesia.dart';
 
 import 'package:get/get.dart';
 import 'package:pitjarus_test/assets/colors.dart';
+import 'package:pitjarus_test/assets/font.dart';
 import 'package:pitjarus_test/assets/size.dart';
 import 'package:pitjarus_test/controllers/stores.dart';
 import 'package:pitjarus_test/models/stores.dart';
@@ -39,9 +40,9 @@ class DetailPage extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        Get.offNamedUntil(RoutesName.list, (route) => false);
+        Get.back();
+        storeController.fetchStores();
         return false;
-        //return true;
       },
       child: Scaffold(
         body: Obx(() {
@@ -94,8 +95,9 @@ class DetailPage extends StatelessWidget {
                                           size: 20.0,
                                         ),
                                         LabelWidget(
+                                          fontFamily: Font.interMedium,
                                           color: ColorsApp.orange,
-                                          text: "${args.id}",
+                                          text: "Lokasi belum Sesuai",
                                         ),
                                         const SizedBox(
                                           width: 10,
@@ -122,29 +124,38 @@ class DetailPage extends StatelessWidget {
                                         icon: Icons.location_city,
                                         size: 20.0,
                                       ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           LabelWidget(
-                                            text:
-                                                storeController.username.value,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            fontFamily: Font.interSemiBold,
+                                            text: args.storeName,
                                           ),
                                           const SizedBox(
                                             height: 10,
                                           ),
                                           LabelWidget(
+                                            fontFamily: Font.interLight,
                                             text: args.address,
+                                            size: TextSize.sizep2,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 5,
                                           ),
                                           Column(
                                             children: List.generate(data.length,
                                                 (index) {
                                               return Padding(
                                                 padding: const EdgeInsets.only(
-                                                    top: 5),
+                                                    top: 2),
                                                 child: Row(
                                                   children: <Widget>[
                                                     Container(
@@ -152,6 +163,9 @@ class DetailPage extends StatelessWidget {
                                                               .width /
                                                           4,
                                                       child: LabelWidget(
+                                                        size: TextSize.sizep2,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
                                                         text: data[index]
                                                             ['name'],
                                                       ),
@@ -161,6 +175,9 @@ class DetailPage extends StatelessWidget {
                                                               .width /
                                                           4,
                                                       child: LabelWidget(
+                                                        size: TextSize.sizep2,
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
                                                         text:
                                                             ": ${data[index]['data']}",
                                                       ),
@@ -195,11 +212,20 @@ class DetailPage extends StatelessWidget {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              const LabelWidget(
+                                              LabelWidget(
+                                                color: Colors.black
+                                                    .withOpacity(0.5),
+                                                fontFamily: Font.interSemiBold,
+                                                size: TextSize.sizep2,
                                                 text: "Last Visit",
                                               ),
                                               args.lastVisit != null
                                                   ? LabelWidget(
+                                                      fontFamily:
+                                                          Font.interLight,
+                                                      size: TextSize.sizep2,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
                                                       text: Waktu(DateTime
                                                               .parse(args
                                                                   .lastVisit))
@@ -232,8 +258,8 @@ class DetailPage extends StatelessWidget {
                               color: ColorsApp.red,
                               text: "No Visit",
                               onPressed: () {
-                                Get.offNamedUntil(
-                                    RoutesName.list, (route) => false);
+                                Get.back();
+                                storeController.fetchStores();
                               },
                               width: Get.mediaQuery.size.width / 2 - 20,
                             ),
@@ -243,8 +269,8 @@ class DetailPage extends StatelessWidget {
                             ButtonWidget(
                               text: "Visit",
                               onPressed: () {
-                                Get.offNamedUntil(
-                                    RoutesName.list, (route) => false);
+                                Get.back();
+                                storeController.fetchStores();
                               },
                               width: Get.mediaQuery.size.width / 2 - 20,
                             )
