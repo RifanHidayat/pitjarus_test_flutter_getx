@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pitjarus_test/assets/colors.dart';
@@ -18,6 +19,10 @@ class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
   final LoginController loginController = Get.put(LoginController());
 
+  final Widget svg = SvgPicture.asset(
+      "assets/images/top.svg",
+      semanticsLabel: 'Acme Logo'
+  );
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -35,15 +40,9 @@ class LoginPage extends StatelessWidget {
                           child: Container(
                             height: Get.mediaQuery.size.height / 2 - 200,
                             width: Get.mediaQuery.size.width,
-                            color: ColorsApp.baseColor,
-                            // child: ClipPath(
-                            //   clipper: myClipper(),
-                            //   child: Container(
-                            //     height: Get.mediaQuery.size.height / 2 - 200,
-                            //     width: Get.mediaQuery.size.width,
-                            //     color: ColorsApp.baseColor,
-                            //   ),
-                            // ),
+
+                            child: svg,
+
                           )),
                       Container(
                         height: Get.mediaQuery.size.height,
@@ -137,14 +136,20 @@ class LoginPage extends StatelessWidget {
                                   text: "App Ver 1.0.0 - 20013FEA6BCC820C",
                                 )),
                           )),
-                      Positioned(
-                          bottom: 0,
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: Get.mediaQuery.size.height / 2 - 200,
-                            width: Get.mediaQuery.size.width,
-                            color: ColorsApp.baseColor,
-                          )),
+                   Positioned(
+                            bottom: 0,
+
+                              child: Container(
+                                height: 80,
+                                width: Get.mediaQuery.size.width,
+                                alignment: Alignment.bottomCenter,
+                                child: RotatedBox(
+                                  quarterTurns: 2,
+                                  child: svg,
+                                ),
+                              ),
+                            ),
+
                     ],
                   ),
                 ),
@@ -154,23 +159,55 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class myClipper extends CustomClipper<Path> {
+class TopClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
     path.lineTo(0, size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(size.width, size.height);
+    // path.quadraticBezierTo(
+    //     size.width / 2, size.height - 100, size.width, size.height);
+    // path.lineTo(size.width, size.height);
+    // path.lineTo(size.width, 0);
+    path.close();
+    return path;
+    // TODO: implement getClip
+  //  throw UnimplementedError();
+  }
+
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return false;
+    throw UnimplementedError();
+  }
+}
+
+class BottomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height);
+
+
+
     path.quadraticBezierTo(
         size.width / 2, size.height - 100, size.width, size.height);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0);
     path.close();
+    return path;
     // TODO: implement getClip
-    throw UnimplementedError();
+    //  throw UnimplementedError();
   }
+
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
+    return false;
     throw UnimplementedError();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/state_manager.dart';
 import 'package:pitjarus_test/assets/alert.dart';
 import 'package:pitjarus_test/models/stores.dart';
@@ -29,6 +30,7 @@ class LoginController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     getSession();
+    getCurrentPosition();
   }
 
   // void auth(BuildContext context) async {
@@ -91,11 +93,11 @@ class LoginController extends GetxController {
       });
 
       isLoading.value = false;
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => ListPage()),
-      // );
-      Get.offAll(RoutesName.list);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ListPage()),
+      );
+      return await Get.offAllNamed(RoutesName.list);
     } else {
       isLoading.value = false;
       Alert().messagevalidation(data['message'], 4);
@@ -119,6 +121,8 @@ class LoginController extends GetxController {
     isKeepusername.value = isKeepUsername!;
     if (isKeepUsername == true) {
       usernameCtr.text = username.toString();
+    }else{
+      usernameCtr.clear();
     }
   }
 
@@ -130,5 +134,16 @@ class LoginController extends GetxController {
     await db.delete();
 
     await Get.offAllNamed(RoutesName.login);
+  }
+
+  void getCurrentPosition() async {
+    // print("data");
+
+    await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) async {})
+        .catchError((e) {
+      print(e);
+    });
   }
 }
